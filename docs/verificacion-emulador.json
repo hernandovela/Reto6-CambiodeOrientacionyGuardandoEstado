@@ -1,0 +1,16 @@
+{
+  "device": "Small Phone API 37, 720x1280, 320dpi",
+  "checks": [
+    "Girar durante la espera: exactamente una X y una O, vuelve el turno humano",
+    "Volver a vertical conserva todas las fichas y el turno",
+    "Partida llega a un resultado",
+    "Girar después del resultado conserva tablero y no duplica el marcador",
+    "Seleccionar dificultad actualiza la pantalla",
+    "Cerrar con Atrás y reabrir conserva marcadores y dificultad",
+    "Cerrar con Atrás y reabrir inicia un tablero nuevo",
+    "Reiniciar marcadores muestra cero",
+    "Marcadores reiniciados y dificultad sobreviven a reinicio del proceso",
+    "Archivo persistente confirma marcadores cero y dificultad Fácil"
+  ],
+  "preferences": "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n<map>\n    <int name=\"difficulty\" value=\"0\" />\n    <int name=\"mComputerWins\" value=\"0\" />\n    <int name=\"mHumanWins\" value=\"0\" />\n    <int name=\"mTies\" value=\"0\" />\n    <boolean name=\"sound\" value=\"true\" />\n</map>\n"
+}
