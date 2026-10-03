@@ -1,0 +1,8 @@
+<resources>
+ <string name="victory_title">¡Ganaste!</string>
+ <string name="victory_message">¡Excelente jugada! Completaste tres en raya. Disfruta tu victoria.</string>
+ <string name="defeat_title">Perdiste</string>
+ <string name="defeat_message">Android ganó esta ronda. ¡La próxima puede ser tuya!</string>
+ <string name="play_again">Volver a jugar</string>
+ <string name="view_board">Ver tablero</string>
+</resources>

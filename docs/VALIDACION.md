@@ -51,3 +51,21 @@ La leyenda identifica a cada jugador con su color; la línea ganadora y el texto
 Las capturas vertical y horizontal anteriores se reemplazaron por capturas reales de la nueva interfaz con la misma partida: una X, una O y el mismo marcador. Se verificaron botones completos de 48 dp en vertical y conservación del tablero, turno, marcador y dificultad al girar en ambos sentidos. La rotación automática queda activada al terminar.
 
 Validación final: compilación y Lint sin errores, 8 pruebas unitarias aprobadas y 6 comprobaciones instrumentales de audio aprobadas. Ver [comprobaciones del diseño](VALIDACION-DISENO.json).
+
+
+## Popups de victoria y derrota
+
+- Victoria: trofeo, título «¡Ganaste!» y mensaje de celebración.
+- Derrota: título «Perdiste» y mensaje para volver a intentarlo.
+- Ambos incluyen «Volver a jugar» y «Ver tablero», con la paleta de colores de la aplicación.
+- El popup abierto se restaura al girar. Después de cerrarlo, no vuelve a aparecer al girar ni se incrementa otra vez el marcador.
+- El sonido de resultado se conserva durante el giro. Silenciar el audio no desactiva los popups.
+- El empate conserva su mensaje en el tablero.
+
+La prueba instrumental prepara posiciones previas a la última jugada y ejecuta los movimientos reales de la aplicación. Verifica títulos, visibilidad, rotación, cierre, nueva partida y reproducción del audio. Resultado: PASS. Compilación, 8 pruebas unitarias y Lint sin errores.
+
+[Salida de la prueba instrumental](VALIDACION-POPUPS.txt).
+
+![Celebración de victoria](popup-victoria.png)
+
+![Aviso de derrota](popup-derrota.png)

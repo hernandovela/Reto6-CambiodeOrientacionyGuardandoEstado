@@ -19,6 +19,8 @@ public final class MainActivity extends Activity {
     private char goFirst='X';
     private int wins, draws, losses;
     private GameAudio audio;
+    private AlertDialog resultDialog;
+    private boolean resultPopupVisible;
     /** Keeps a playing sound alive across Activity recreation without restarting it. */
     private static final class GameAudio {
         MediaPlayer human, computer, victory, defeat;
@@ -54,6 +56,7 @@ public final class MainActivity extends Activity {
             computerTurn=state.getBoolean("computerTurn");
             gameOver=state.getBoolean("mGameOver");
             goFirst=state.getChar("mGoFirst",'X');
+            resultPopupVisible=state.getBoolean("resultPopupVisible");
         }
         setContentView(R.layout.main);
         board=findViewById(R.id.board); board.setGame(game); board.setMoveListener(this::humanMove);
@@ -95,8 +98,10 @@ public final class MainActivity extends Activity {
             audio.pauseAll();
             if(result==TicTacToeGame.HUMAN_WINS) play(audio.victory);
             else if(result==TicTacToeGame.COMPUTER_WINS) play(audio.defeat);
+            resultPopupVisible=result==TicTacToeGame.HUMAN_WINS || result==TicTacToeGame.COMPUTER_WINS;
         }
         render();
+        showResultPopup();
     }
     private void render() {
         int result=game.result(); displayScores();
@@ -119,7 +124,32 @@ public final class MainActivity extends Activity {
         board.setEnabled(!computerTurn && !gameOver); board.invalidate();
     }
     private void displayScores() { score.setText("Tú  "+wins+"   ·   Empates  "+draws+"   ·   Android  "+losses); }
+    private void showResultPopup() {
+        if(!resumed || !gameOver || !resultPopupVisible || (resultDialog!=null && resultDialog.isShowing())) return;
+        boolean victory=game.result()==TicTacToeGame.HUMAN_WINS;
+        View content=getLayoutInflater().inflate(R.layout.result_popup,null);
+        TextView title=content.findViewById(R.id.result_title);
+        title.setText(victory ? R.string.victory_title : R.string.defeat_title);
+        title.setTextColor(getResources().getColor(victory ? R.color.x_label : R.color.o_label,null));
+        if(Build.VERSION.SDK_INT>=28) title.setAccessibilityHeading(true);
+        ((TextView)content.findViewById(R.id.result_message)).setText(victory ? R.string.victory_message : R.string.defeat_message);
+        ((ImageView)content.findViewById(R.id.result_icon)).setImageResource(victory ? R.drawable.ic_trophy : R.drawable.ic_rematch);
+        resultDialog=new AlertDialog.Builder(this).setView(content)
+            .setPositiveButton(R.string.play_again,(dialog,which)->newGame())
+            .setNegativeButton(R.string.view_board,(dialog,which)->{})
+            .create();
+        resultDialog.setCanceledOnTouchOutside(false);
+        resultDialog.setOnDismissListener(dialog->{ resultPopupVisible=false; resultDialog=null; });
+        resultDialog.show();
+        resultDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.result_background));
+        resultDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(victory ? R.color.x_label : R.color.o_label,null));
+    }
+    private void closeResultPopup() {
+        resultPopupVisible=false;
+        if(resultDialog!=null) { resultDialog.dismiss(); resultDialog=null; }
+    }
     private void newGame() {
+        closeResultPopup();
         audio.pauseAll(); handler.removeCallbacks(computerMove); game.clearBoard(); gameOver=false;
         goFirst=goFirst=='X'?'O':'X'; computerTurn=goFirst=='O'; render(); scheduleComputer();
     }
@@ -148,7 +178,7 @@ public final class MainActivity extends Activity {
             audio.victory=MediaPlayer.create(getApplicationContext(),R.raw.victory);
             audio.defeat=MediaPlayer.create(getApplicationContext(),R.raw.defeat);
         }
-        scheduleComputer();
+        scheduleComputer(); showResultPopup();
     }
     @Override protected void onPause() {
         resumed=false; handler.removeCallbacks(computerMove);
@@ -164,11 +194,14 @@ public final class MainActivity extends Activity {
         super.onStop();
     }
     @Override protected void onDestroy() {
+        // The new Activity restores visibility from Bundle; do not mark it dismissed on rotation.
+        if(resultDialog!=null) { resultDialog.setOnDismissListener(null); resultDialog.dismiss(); resultDialog=null; }
         if(!isChangingConfigurations()) audio.release();
         super.onDestroy();
     }
     @Override protected void onSaveInstanceState(Bundle out) {
         out.putCharArray("board",game.getBoardState()); out.putBoolean("computerTurn",computerTurn);
+        out.putBoolean("resultPopupVisible",resultPopupVisible);
         out.putBoolean("mGameOver",gameOver); out.putChar("mGoFirst",goFirst); out.putCharSequence("info",status.getText());
         super.onSaveInstanceState(out);
     }

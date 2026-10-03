@@ -4,6 +4,7 @@ Proyecto Android Studio independiente, Java y vistas XML. Paquete `com.hernandov
 
 ## Funcionalidad
 - Tres en raya contra Android, tablero Canvas con imágenes y sonidos.
+- Popups de resultado: celebración con trofeo al ganar y aviso «Perdiste» cuando gana Android. Permiten volver a jugar o ver el tablero; se conservan al girar sin volver a contar el resultado.
 - Sonido de victoria al ganar y sonido diferente de derrota cuando gana Android. Respetan la opción Sonido; al girar, el audio en curso continúa sin reiniciarse.
 - Diseño visual: X azul, O frambuesa, tablero claro y fondo azul oscuro con degradado. Botón principal destacado y resultado con el color del ganador.
 - Vertical: tablero de 250 dp y controles en columna. Horizontal: tablero de 270 dp a la izquierda y controles desplazables a la derecha, sin barra de título.
