@@ -33,6 +33,3 @@ Documentación: https://developer.android.com/topic/libraries/architecture/views
 
 ## Evidencias
 Ver [validación y capturas](docs/VALIDACION.md).
-
-## Evidencias
-Ver [validación y capturas](docs/VALIDACION.md).
