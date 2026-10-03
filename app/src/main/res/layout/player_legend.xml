@@ -1,0 +1,4 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingBottom="12dp">
+ <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="TÚ  ×" android:textStyle="bold" android:textSize="14sp" android:gravity="center" android:textColor="@color/x_label"/>
+ <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="ANDROID  ○" android:textStyle="bold" android:textSize="14sp" android:gravity="center" android:textColor="@color/o_label"/>
+</LinearLayout>

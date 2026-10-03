@@ -1,7 +1,7 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/root" android:saveEnabled="false" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
- <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-  <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="TÚ ×                         ANDROID ○" android:gravity="center" android:textColor="#147D73" android:padding="8dp"/>
-  <com.hernandovela.reto6.BoardView android:id="@+id/board" android:layout_width="300dp" android:layout_height="300dp"/>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/root" android:saveEnabled="false" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@drawable/app_background">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:padding="12dp">
+  <include layout="@layout/player_legend"/>
+  <com.hernandovela.reto6.BoardView android:id="@+id/board" android:layout_width="250dp" android:layout_height="250dp"/>
   <include layout="@layout/game_panel"/>
  </LinearLayout>
 </ScrollView>

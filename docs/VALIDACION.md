@@ -32,3 +32,22 @@ La ejecución en API 24–36 no se probó en dispositivos separados.
 - La rotación automática del emulador queda activada; no cambia la opción Sonido.
 - Compilación, 8 pruebas unitarias y Lint completados correctamente.
 - Ejecutar la prueba de audio: instalar el APK de `assembleDebugAndroidTest` y ejecutar `adb shell am instrument -w com.hernandovela.reto6.test/com.hernandovela.reto6.OutcomeSoundInstrumentation`.
+
+
+## Mejora de experiencia visual
+
+Paleta aplicada el 3 de octubre de 2026:
+
+| Elemento | Color |
+| --- | --- |
+| X del jugador | Azul `#3159C9` |
+| O de Android | Frambuesa `#B83F58` |
+| Fondo | Degradado `#111C38` → `#29305B` |
+| Tablero | Claro `#F7F8FF` |
+| Acción Nueva partida | Azul `#496EE8` |
+
+La leyenda identifica a cada jugador con su color; la línea ganadora y el texto del resultado usan el color correspondiente. Las formas X/O y los mensajes permiten distinguir el resultado sin depender únicamente del color.
+
+Las capturas vertical y horizontal anteriores se reemplazaron por capturas reales de la nueva interfaz con la misma partida: una X, una O y el mismo marcador. Se verificaron botones completos de 48 dp en vertical y conservación del tablero, turno, marcador y dificultad al girar en ambos sentidos. La rotación automática queda activada al terminar.
+
+Validación final: compilación y Lint sin errores, 8 pruebas unitarias aprobadas y 6 comprobaciones instrumentales de audio aprobadas. Ver [comprobaciones del diseño](VALIDACION-DISENO.json).

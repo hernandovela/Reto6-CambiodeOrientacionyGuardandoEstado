@@ -5,7 +5,8 @@ Proyecto Android Studio independiente, Java y vistas XML. Paquete `com.hernandov
 ## Funcionalidad
 - Tres en raya contra Android, tablero Canvas con imágenes y sonidos.
 - Sonido de victoria al ganar y sonido diferente de derrota cuando gana Android. Respetan la opción Sonido; al girar, el audio en curso continúa sin reiniciarse.
-- Vertical: tablero y controles en columna. Horizontal: tablero de 270 dp a la izquierda y controles desplazables a la derecha, sin barra de título.
+- Diseño visual: X azul, O frambuesa, tablero claro y fondo azul oscuro con degradado. Botón principal destacado y resultado con el color del ganador.
+- Vertical: tablero de 250 dp y controles en columna. Horizontal: tablero de 270 dp a la izquierda y controles desplazables a la derecha, sin barra de título.
 - `onSaveInstanceState` conserva tablero (copia de char[]), fin de partida, mensaje, primer jugador y turno actual. Android recrea la Activity normalmente: no se bloquea orientación ni se usa configChanges.
 - `SharedPreferences` (`ttt_prefs`) conserva victorias, empates, dificultad (ordinal del enum) y sonido. Se escribe al cambiar y en onStop.
 - Opciones con icono para reiniciar marcadores; sin opción Salir.

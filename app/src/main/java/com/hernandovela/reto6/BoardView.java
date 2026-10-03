@@ -11,6 +11,7 @@ public final class BoardView extends View {
     public static final int GRID_WIDTH = 6;
     private Bitmap mHumanBitmap, mComputerBitmap;
     private Paint mPaint;
+    private ColorFilter xTint, oTint;
     private TicTacToeGame mGame;
     private MoveListener listener;
     private int downCell = -1;
@@ -22,6 +23,8 @@ public final class BoardView extends View {
         mHumanBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.x_img);
         mComputerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.o_img);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        xTint=new PorterDuffColorFilter(getResources().getColor(R.color.x_color,null),PorterDuff.Mode.SRC_IN);
+        oTint=new PorterDuffColorFilter(getResources().getColor(R.color.o_color,null),PorterDuff.Mode.SRC_IN);
         setClickable(true);
         setContentDescription("Tablero de tres en raya, tres filas y tres columnas");
     }
@@ -38,14 +41,15 @@ public final class BoardView extends View {
         super.onDraw(canvas);
         float cw = getWidth()/3f, ch = getHeight()/3f;
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.WHITE);
+        mPaint.setColorFilter(null);
+        mPaint.setColor(getResources().getColor(R.color.board_surface,null));
         canvas.drawRoundRect(0,0,getWidth(),getHeight(),24,24,mPaint);
         int[] line = mGame == null ? null : mGame.winningLine();
         if (line != null) {
-            mPaint.setColor(Color.rgb(220,242,232));
+            mPaint.setColor(getResources().getColor(mGame.getBoardOccupant(line[0])=='X' ? R.color.x_win : R.color.o_win,null));
             for (int i : line) canvas.drawRoundRect(i%3*cw+7,i/3*ch+7,(i%3+1)*cw-7,(i/3+1)*ch-7,18,18,mPaint);
         }
-        mPaint.setColor(Color.rgb(221,230,226));
+        mPaint.setColor(getResources().getColor(R.color.board_grid,null));
         mPaint.setStrokeWidth(GRID_WIDTH * getResources().getDisplayMetrics().density / 2);
         for (int i=1;i<3;i++) {
             canvas.drawLine(i*cw,12,i*cw,getHeight()-12,mPaint);
@@ -57,6 +61,7 @@ public final class BoardView extends View {
             char c = mGame.getBoardOccupant(i);
             if (c == TicTacToeGame.EMPTY) continue;
             RectF destination = new RectF(i%3*cw+inset,i/3*ch+inset,(i%3+1)*cw-inset,(i/3+1)*ch-inset);
+            mPaint.setColorFilter(c == 'X' ? xTint : oTint);
             canvas.drawBitmap(c == 'X' ? mHumanBitmap : mComputerBitmap,null,destination,mPaint);
         }
     }

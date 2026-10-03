@@ -1,0 +1,16 @@
+{
+  "palette": "X azul #3159C9; O frambuesa #B83F58; fondo azul oscuro con degradado",
+  "checks": [
+    "Ambas fichas visibles en el tablero",
+    "Botones completos en vertical, con altura de 48 dp",
+    "Horizontal conserva tablero, turno, marcador y dificultad",
+    "Volver a vertical conserva fichas",
+    "Rotación automática activada al finalizar"
+  ],
+  "state": {
+    "board": "Tablero de tres en raya. Fila 1: vacía, vacía, vacía. Fila 2: vacía, X, vacía. Fila 3: O, vacía, vacía. ",
+    "status": "Tu turno",
+    "score": "Tú  4   ·   Empates  0   ·   Android  3",
+    "detail": "Tú × · Android ○ · Fácil"
+  }
+}

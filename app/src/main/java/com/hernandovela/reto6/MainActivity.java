@@ -100,6 +100,7 @@ public final class MainActivity extends Activity {
     }
     private void render() {
         int result=game.result(); displayScores();
+        status.setTextColor(getResources().getColor(result==TicTacToeGame.HUMAN_WINS ? R.color.x_label : result==TicTacToeGame.COMPUTER_WINS ? R.color.o_label : R.color.text_primary,null));
         if(result==TicTacToeGame.HUMAN_WINS) status.setText("¡Ganaste!");
         else if(result==TicTacToeGame.COMPUTER_WINS) status.setText("Android gana");
         else if(result==TicTacToeGame.DRAW) status.setText("¡Empate!");

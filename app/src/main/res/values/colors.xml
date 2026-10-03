@@ -1,0 +1,16 @@
+<resources>
+ <color name="background_top">#111C38</color>
+ <color name="background_bottom">#29305B</color>
+ <color name="surface">#263455</color>
+ <color name="text_primary">#F6F8FF</color>
+ <color name="text_secondary">#C4CEE5</color>
+ <color name="x_color">#3159C9</color>
+ <color name="o_color">#B83F58</color>
+ <color name="x_label">#A8C6FF</color>
+ <color name="o_label">#FFB4C4</color>
+ <color name="board_surface">#F7F8FF</color>
+ <color name="board_grid">#DCE2F1</color>
+ <color name="x_win">#DCE7FF</color>
+ <color name="o_win">#FFE0E8</color>
+ <color name="primary_button">#496EE8</color>
+</resources>
