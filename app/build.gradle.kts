@@ -8,7 +8,7 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "android.test.InstrumentationTestRunner"
+        testInstrumentationRunner = "com.hernandovela.reto6.OutcomeSoundInstrumentation"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

@@ -24,3 +24,11 @@ La ejecución en API 24–36 no se probó en dispositivos separados.
 
 ![Vertical](Reto6-vertical.png)
 ![Horizontal](Reto6-horizontal.png)
+
+
+## Sonidos de resultado
+- Victoria: melodía ascendente original; derrota: melodía descendente original.
+- Prueba instrumental en Small Phone API 37: victoria, derrota, retención del mismo reproductor durante recreación, preferencia activada conservada, silencio y empate: 6 comprobaciones aprobadas.
+- La rotación automática del emulador queda activada; no cambia la opción Sonido.
+- Compilación, 8 pruebas unitarias y Lint completados correctamente.
+- Ejecutar la prueba de audio: instalar el APK de `assembleDebugAndroidTest` y ejecutar `adb shell am instrument -w com.hernandovela.reto6.test/com.hernandovela.reto6.OutcomeSoundInstrumentation`.

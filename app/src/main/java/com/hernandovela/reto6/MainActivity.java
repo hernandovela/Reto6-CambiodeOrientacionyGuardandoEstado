@@ -18,14 +18,29 @@ public final class MainActivity extends Activity {
     private boolean computerTurn, gameOver, soundEnabled, resumed;
     private char goFirst='X';
     private int wins, draws, losses;
-    private MediaPlayer humanSound, computerSound;
+    private GameAudio audio;
+    /** Keeps a playing sound alive across Activity recreation without restarting it. */
+    private static final class GameAudio {
+        MediaPlayer human, computer, victory, defeat;
+        void pauseAll() {
+            for(MediaPlayer player:new MediaPlayer[]{human,computer,victory,defeat})
+                if(player!=null && player.isPlaying()) player.pause();
+        }
+        void release() {
+            for(MediaPlayer player:new MediaPlayer[]{human,computer,victory,defeat})
+                if(player!=null) player.release();
+            human=computer=victory=defeat=null;
+        }
+    }
     private final Runnable computerMove=()->{
         if(!resumed || !computerTurn || gameOver) return;
-        if(game.setMove('O',game.getComputerMove())) play(computerSound);
+        if(game.setMove('O',game.getComputerMove())) play(audio.computer);
         computerTurn=false; finishMove();
     };
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        audio=(GameAudio)getLastNonConfigurationInstance();
+        if(audio==null) audio=new GameAudio();
         // Root Back must finish this match, including Android's predictive back path.
         if(Build.VERSION.SDK_INT>=33) getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
             android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::finish);
@@ -63,7 +78,7 @@ public final class MainActivity extends Activity {
     }
     private void humanMove(int position) {
         if(computerTurn || gameOver || !game.setMove('X',position)) return;
-        play(humanSound);
+        play(audio.human);
         computerTurn=game.result()==TicTacToeGame.PLAYING;
         finishMove(); scheduleComputer();
     }
@@ -77,6 +92,9 @@ public final class MainActivity extends Activity {
             gameOver=true; computerTurn=false;
             if(result==TicTacToeGame.HUMAN_WINS) wins++; else if(result==TicTacToeGame.COMPUTER_WINS) losses++; else draws++;
             savePreferences();
+            audio.pauseAll();
+            if(result==TicTacToeGame.HUMAN_WINS) play(audio.victory);
+            else if(result==TicTacToeGame.COMPUTER_WINS) play(audio.defeat);
         }
         render();
     }
@@ -101,7 +119,7 @@ public final class MainActivity extends Activity {
     }
     private void displayScores() { score.setText("Tú  "+wins+"   ·   Empates  "+draws+"   ·   Android  "+losses); }
     private void newGame() {
-        handler.removeCallbacks(computerMove); game.clearBoard(); gameOver=false;
+        audio.pauseAll(); handler.removeCallbacks(computerMove); game.clearBoard(); gameOver=false;
         goFirst=goFirst=='X'?'O':'X'; computerTurn=goFirst=='O'; render(); scheduleComputer();
     }
     @Override public boolean onCreateOptionsMenu(Menu menu) { getMenuInflater().inflate(R.menu.options_menu,menu); return true; }
@@ -109,7 +127,7 @@ public final class MainActivity extends Activity {
         int id=item.getItemId();
         if(id==R.id.new_game) newGame();
         else if(id==R.id.reset_scores) { wins=draws=losses=0; savePreferences(); displayScores(); }
-        else if(id==R.id.sound) { soundEnabled=!soundEnabled; savePreferences(); item.setChecked(soundEnabled); }
+        else if(id==R.id.sound) { soundEnabled=!soundEnabled; if(!soundEnabled) audio.pauseAll(); savePreferences(); item.setChecked(soundEnabled); }
         else if(id==R.id.difficulty) new AlertDialog.Builder(this).setTitle("Dificultad").setSingleChoiceItems(new String[]{"Fácil","Normal","Experto"},game.getDifficulty().ordinal(),(dialog,which)->{
             game.setDifficulty(TicTacToeGame.Difficulty.values()[which]); savePreferences(); render(); dialog.dismiss();
         }).setNegativeButton("Cancelar",null).show();
@@ -123,19 +141,31 @@ public final class MainActivity extends Activity {
     private void play(MediaPlayer player) { if(soundEnabled && player!=null) { player.seekTo(0); player.start(); } }
     @Override protected void onResume() {
         super.onResume(); resumed=true;
-        humanSound=MediaPlayer.create(this,R.raw.human_move); computerSound=MediaPlayer.create(this,R.raw.computer_move);
+        if(audio.human==null) {
+            audio.human=MediaPlayer.create(getApplicationContext(),R.raw.human_move);
+            audio.computer=MediaPlayer.create(getApplicationContext(),R.raw.computer_move);
+            audio.victory=MediaPlayer.create(getApplicationContext(),R.raw.victory);
+            audio.defeat=MediaPlayer.create(getApplicationContext(),R.raw.defeat);
+        }
         scheduleComputer();
     }
     @Override protected void onPause() {
         resumed=false; handler.removeCallbacks(computerMove);
-        if(humanSound!=null) {humanSound.release();humanSound=null;}
-        if(computerSound!=null) {computerSound.release();computerSound=null;}
         super.onPause();
     }
     // Legacy fallback only: API 33+ uses the OnBackInvokedDispatcher registered above.
     @android.annotation.SuppressLint("GestureBackNavigation")
     @Override public void onBackPressed() { finish(); }
-    @Override protected void onStop() { savePreferences(); super.onStop(); }
+    @Override public Object onRetainNonConfigurationInstance() { return audio; }
+    @Override protected void onStop() {
+        savePreferences();
+        if(!isChangingConfigurations()) audio.release();
+        super.onStop();
+    }
+    @Override protected void onDestroy() {
+        if(!isChangingConfigurations()) audio.release();
+        super.onDestroy();
+    }
     @Override protected void onSaveInstanceState(Bundle out) {
         out.putCharArray("board",game.getBoardState()); out.putBoolean("computerTurn",computerTurn);
         out.putBoolean("mGameOver",gameOver); out.putChar("mGoFirst",goFirst); out.putCharSequence("info",status.getText());
